@@ -1,0 +1,182 @@
+
+- hosts: all
+  ignore_unreachable: true
+  become: true
+  gather_facts: no
+
+  vars:
+      host: "{{ inventory_hostname }}"
+      ansible_user: "adminuser"
+  tasks:
+  
+    - name: Run apt update
+      command: apt update
+
+    - name: Deadsnakes PPA to get Python 3.9
+      become: yes
+      apt_repository:
+        repo='ppa:deadsnakes/ppa'
+
+  #  - name: Update package lists
+  #    apt: update_cache=yes
+  #    become: yes
+
+   # - name: Install Python 3.9
+    #  apt:
+     #   name: python3.9
+      #  state: present
+      #become: yes
+      
+    - name: Make sure required packages are installed
+      apt: 
+        pkg=nginx,git,python3.9,python3.9-venv,gettext
+        state=present
+    
+
+
+    - name: Download code from Github
+      ansible.builtin.git:
+        repo: https://github.com/Yur4ik1234/CIFAR-10-flask.git
+        dest: /home/{{ ansible_user }}/sites/{{ host }}
+    
+    - name: Install dependencies
+      pip:
+        requirements: /home/{{ ansible_user }}/sites/{{ host }}/requirements.txt
+        virtualenv: /home/{{ ansible_user }}/sites/{{ host }}/venv/
+        virtualenv_command: /usr/bin/python3.9 -m venv
+ 
+  
+    - name: Set permissions
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}
+        mode: '0777'
+        recurse: yes 
+        
+    
+    - name: Add user to the sudo group
+      user:
+        name: "adminuser"
+        groups: sudo
+        append: yes
+      when: not ansible_check_mode
+
+    #- name: Add nginx config to sites-available
+    #  template: 
+    #    src=./site-available.j2
+    #    dest=/etc/nginx/sites-available/{{ host }}
+    #  notify:
+    #    - Restart nginx
+    #  tags: nginx
+
+    - name: Create Nginx configuration file
+      ansible.builtin.copy:
+        content: |
+          server {
+            listen 80;
+            server_name {{ host }};
+
+            location / {
+                proxy_pass http://unix:/tmp/{{ host }}.socket;
+                proxy_set_header Host $host;
+            }
+          }
+        dest: /etc/nginx/sites-available/{{ host }}
+
+
+    - name: Add symlink in nginx sites-enabled
+      file:
+          src=/etc/nginx/sites-available/{{ host }}
+          dest=/etc/nginx/sites-enabled/{{ host }}
+          state=link
+      notify:
+          - Restart nginx
+
+    - name: replace line
+      lineinfile: 
+       path: /etc/nginx/nginx.conf 
+       regexp: '^(.*)server_names_hash_bucket_size 64(.*)$' 
+       line: 'server_names_hash_bucket_size 128;'
+       backrefs: yes
+      notify:
+        - Restart nginx
+  
+
+  #  - name: Write gunicorn service script
+  #    template: 
+  #      src=./gunicorn.j2
+  #      dest=/etc/systemd/system/gunicorn-{{ host }}.service
+  #    notify:
+  #      - Restart gunicorn
+  #    tags:
+  #      - gunicorn
+
+    - name: Create Gunicorn systemd service unit file
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Gunicorn server for {{ host }}
+          
+          [Service]
+          Restart=on-failure
+          User=root
+          WorkingDirectory=/home/{{ ansible_user }}/sites/{{ host }}
+          EnvironmentFile=/home/{{ ansible_user }}/sites/{{ host }}/.env
+          
+          ExecStart=/home/{{ ansible_user }}/sites/{{ host }}/venv/bin/gunicorn \
+              --bind unix:/tmp/{{ host }}.socket \
+              app:app
+          
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/gunicorn-{{ host }}.service
+      notify:
+        - Restart gunicorn
+      tags:
+        - gunicorn
+
+#    - name: Collect Static Files
+#      community.general.django_manage:
+#        command: collectstatic --noinput
+#        project_path: "/home/{{ ansible_user }}/sites/{{ host }}"
+#        virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
+#      tags:
+#        - static
+    - name: Create .env file
+      ansible.builtin.copy:
+        content: |
+          IS_DJANGO_DEBUG_FALSE=y
+          DEBUG=False
+          SITENAME={{ host }}
+        dest: /home/{{ ansible_user }}/sites/{{ host }}/.env
+
+   # - name: Create .env file
+   #   template: 
+   #     src=./dotenv.j2
+   #     dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
+   #   tags:
+   #     - dotenv
+    
+    - name: Write SECRET_KEY to .env
+      ansible.builtin.lineinfile:
+        path: /home/{{ ansible_user }}/sites/{{ host }}/.env
+        line: SECRET_KEY="{{ lookup('password', '/dev/null') }}"
+      tags:
+        - dotenv
+
+    - name: Restart gunicorn
+      systemd:
+        name=gunicorn-{{ host }}
+        daemon_reload=yes
+        enabled=yes
+        state=restarted
+    
+  handlers:   
+    - name: Restart nginx
+      service:  name=nginx state=restarted
+
+    - name: Restart gunicorn
+      systemd:
+        name=gunicorn-{{ host }}
+        daemon_reload=yes
+        enabled=yes
+        state=restarted
