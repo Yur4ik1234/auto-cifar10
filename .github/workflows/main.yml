@@ -231,41 +231,60 @@ jobs:
       working-directory: ${{ github.workspace }}
     
   
+  ansible-deploy:
+    name: 'Deploy Ansible Playbook'
+    runs-on: ubuntu-latest
+    needs: [deploy]  # This job depends on the "deploy" job, which prepares your inventory file
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ansible_ssh_key
+          chmod 600 ansible_ssh_key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Define this secret with your SSH private key
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook -i host.txt -u adminuser -e ansible_ssh_private_key_file=ansible_ssh_key ansible/playbook.yaml  
   
     # deploying ansible 
-  ansible-deploy:
-    name: 'Deploy ansible playbook'
-    runs-on: ubuntu-latest  
-    needs: [deploy]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #ansible-deploy:
+  #  name: 'Deploy ansible playbook'
+  #  runs-on: ubuntu-latest  
+  #  needs: [deploy]
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
   #  - name: Create Ansible Inventory
   #    run: |
   #      echo "$(<host.txt)" > inventory.ini
   #    working-directory: ${{ github.workspace }}
-    - name: Set up inventory
-      run: echo '::set-output name=inventory::$(cat host.txt)'
+  #  - name: Set up inventory
+  #    run: echo '::set-output name=inventory::$(cat host.txt)'
 
-    - name: Run playbook
-      uses: dawidd6/action-ansible-playbook@v2
-      with:
+  #  - name: Run playbook
+  #    uses: dawidd6/action-ansible-playbook@v2
+  #    with:
         # Required, playbook filepath
-        playbook: ansible/playbook.yaml
+  #      playbook: ansible/playbook.yaml
         # Optional, directory where playbooks live
         #directory: ./
         # Optional, SSH private key
-        key: ${{secrets.SSH_PRIVATE_KEY}}
+  #      key: ${{secrets.SSH_PRIVATE_KEY}}
         # Optional, literal inventory file contents
         #inventory: |
         #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
           
         #inventory: ${{ steps.set-up-inventory.outputs.inventory }}
-        inventory: |
-          13.80.129.170 ansible_become=yes ansible_ssh_user=adminuser 
+  #      inventory: |
+  #        13.80.129.170 ansible_become=yes ansible_ssh_user=adminuser 
+
         
           
           
