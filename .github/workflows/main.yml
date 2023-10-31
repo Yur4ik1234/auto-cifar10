@@ -216,14 +216,14 @@ jobs:
 
     - name: Append IPs to host.txt
       run: |
-        python3 iphost.py >> ansible/host.txt
+        python3 iphost.py >> host.txt
       working-directory: ${{ github.workspace }}
     
     - name: Commit and Push Changes
       run: |
         git config --global user.email "gajdaryura@gmail.com"
         git config --global user.name "Yur4ik1234"
-        git add ip.txt ansible/host.txt
+        git add ip.txt host.txt
         git commit -m "Update IPs"
         git push https://$GH_PAT@github.com/Yur4ik1234/auto-cifar10.git HEAD:master
       env: 
