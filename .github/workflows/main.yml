@@ -22,7 +22,8 @@ env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
   TF_VAR_ssh: "${{ secrets.K8S_SSH_PUBLIC }}"
-  GH_PAT: ${{ secrets.GH_PAT }} 
+  GH_PAT: ${{ secrets.GH_PAT }}
+  SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}  
 
 jobs:
   unit-test:
@@ -249,7 +250,7 @@ jobs:
 
       - name: Run Ansible playbook
         run: |
-          ansible-playbook -i host.txt -u adminuser --extra-vars "ansible_ssh_password=Yura111!" ansible/playbook.yaml --force
+          ansible-playbook -i host.txt -u adminuser --extra-vars "ansible_ssh_password=${{ secrets.SSH_PASSWORD }}" ansible/playbook.yaml --force
 
   
   
