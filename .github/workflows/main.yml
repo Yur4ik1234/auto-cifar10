@@ -238,7 +238,7 @@ jobs:
       - name: Read host.txt and write to file
         run: |
           echo "Reading host.txt"
-          cat host.txt > inventory_content.txt
+          cat ansible/host.txt > inventory_content.txt
 
       - name: Generate Inventory File
         run: |
