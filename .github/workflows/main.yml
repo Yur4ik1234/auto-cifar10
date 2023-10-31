@@ -249,7 +249,8 @@ jobs:
 
       - name: Run Ansible playbook
         run: |
-          ansible-playbook -i host.txt -u adminuser -e ansible_ssh_private_key_file=ansible_ssh_key ansible/playbook.yaml  
+          ansible-playbook -i host.txt -u adminuser --extra-vars "ansible_ssh_password=Yura111!" playbook.yaml
+  
   
     # deploying ansible 
   #ansible-deploy:
