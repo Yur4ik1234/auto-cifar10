@@ -238,9 +238,9 @@ jobs:
       - name: Read host.txt and write to file
         run: |
           echo "Reading host.txt"
-          cat ansible/host.txt > inventory_content.txt
+          cat host.txt > inventory_content.txt
         working-directory: ${{ github.workspace }}
-        
+
       - name: Generate Inventory File
         run: |
           echo "Generating inventory.ini"
