@@ -230,20 +230,35 @@ jobs:
         GH_PAT: ${{ secrets.GH_PAT }}  
       working-directory: ${{ github.workspace }}
     
+  dynamic-inventory:
+    name: 'Generate Dynamic Inventory'
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read host.txt and write to file
+        run: |
+          echo "Reading host.txt"
+          cat host.txt > inventory_content.txt
+
+      - name: Generate Inventory File
+        run: |
+          echo "Generating inventory.ini"
+          cat inventory_content.txt > inventory.ini
+
 
     # deploying ansible 
   ansible-deploy:
     name: 'Deploy ansible playbook'
     runs-on: ubuntu-latest  
-    needs: [deploy]
+    needs: [dynamic-inventory]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Create Ansible Inventory
-      run: |
-        echo "$(<host.txt)" > inventory.ini
-      working-directory: ${{ github.workspace }}
+  #  - name: Create Ansible Inventory
+  #    run: |
+  #      echo "$(<host.txt)" > inventory.ini
+  #    working-directory: ${{ github.workspace }}
 
     - name: Run playbook
       uses: dawidd6/action-ansible-playbook@v2
