@@ -262,7 +262,8 @@ jobs:
         #inventory: |
         #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-        inventory: ${{ steps.set-up-inventory.outputs.inventory }}
+        #inventory: ${{ steps.set-up-inventory.outputs.inventory }}
+        inventory: /home/runner/work/auto-cifar10/auto-cifar10/hosts.txt
         
           
           
