@@ -247,7 +247,7 @@ jobs:
   #      echo "$(<host.txt)" > inventory.ini
   #    working-directory: ${{ github.workspace }}
     - name: Set up inventory
-      run: echo '::set-output name=inventory::$(cat ansible/host.txt)'
+      run: echo '::set-output name=inventory::$(cat host.txt)'
 
     - name: Run playbook
       uses: dawidd6/action-ansible-playbook@v2
@@ -263,7 +263,7 @@ jobs:
         #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #inventory: ${{ steps.set-up-inventory.outputs.inventory }}
-        inventory: /home/runner/work/auto-cifar10/auto-cifar10/hosts.txt
+        inventory: ${{ steps.set-up-inventory.outputs.inventory }}
         
           
           
