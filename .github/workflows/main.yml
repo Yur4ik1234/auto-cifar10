@@ -244,7 +244,7 @@ jobs:
         run: |
           echo "Generating inventory.ini"
           cat inventory_content.txt > inventory.ini
-
+        working-directory: ${{ github.workspace }}
 
     # deploying ansible 
   ansible-deploy:
