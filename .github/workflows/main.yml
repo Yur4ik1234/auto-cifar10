@@ -230,28 +230,14 @@ jobs:
         GH_PAT: ${{ secrets.GH_PAT }}  
       working-directory: ${{ github.workspace }}
     
-  #dynamic-inventory:
-  #  name: 'Generate Dynamic Inventory'
-  #  needs: [deploy]
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Read host.txt and write to file
-  #      run: |
-  #        echo "Reading host.txt"
-  #        cat host.txt > inventory_content.txt
-  #      working-directory: ${{ github.workspace }}
-  #
-  #    - name: Generate Inventory File
-  #      run: |
-  #        echo "Generating inventory.ini"
-  #        cat inventory_content.txt > inventory.ini
-  #      working-directory: ${{ github.workspace }}
+  
 
+  
     # deploying ansible 
   ansible-deploy:
     name: 'Deploy ansible playbook'
     runs-on: ubuntu-latest  
-    needs: [delpoy]
+    needs: [deploy]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -260,9 +246,6 @@ jobs:
   #    run: |
   #      echo "$(<host.txt)" > inventory.ini
   #    working-directory: ${{ github.workspace }}
-    - name: Set up inventory
-      run: echo '::set-output name=inventory::$(cat ./host.txt)'
-      working-directory: ${{ github.workspace }}
 
     - name: Run playbook
       uses: dawidd6/action-ansible-playbook@v2
@@ -277,7 +260,7 @@ jobs:
         #inventory: |
         #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-        inventory: ${{ steps.set-up-inventory.outputs.inventory }}
+        inventory: ./inventory.ini 
         
           
           
