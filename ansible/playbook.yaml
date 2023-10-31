@@ -38,7 +38,7 @@
       ansible.builtin.git:
         repo: https://github.com/Yur4ik1234/CIFAR-10-flask.git
         dest: /home/{{ ansible_user }}/sites/{{ host }}
-        become: yes
+        force: yes
     
     - name: Install dependencies
       pip:
