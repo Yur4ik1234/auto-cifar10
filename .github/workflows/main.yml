@@ -261,7 +261,7 @@ jobs:
   #      echo "$(<host.txt)" > inventory.ini
   #    working-directory: ${{ github.workspace }}
     - name: Set up inventory
-      run: echo '::set-output name=inventory::$(cat ansible/host.txt)'
+      run: echo '::set-output name=inventory::$(cat ./host.txt)'
       working-directory: ${{ github.workspace }}
 
     - name: Run playbook
