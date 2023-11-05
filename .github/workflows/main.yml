@@ -52,6 +52,9 @@ jobs:
         run: |
           source venv/bin/activate
           pip3 install -r requirements.txt
+          pip3 install --upgrade Flask
+          pip3 install --upgrade Werkzeug
+
         working-directory: CIFAR-10-flask
 
       - name: Run Unit Tests
