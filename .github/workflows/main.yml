@@ -34,9 +34,9 @@ jobs:
       uses: actions/checkout@v3
     # Unit test for check app state 
     - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.8  
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.8  
 
       - name: Clone external repository
         run: |
