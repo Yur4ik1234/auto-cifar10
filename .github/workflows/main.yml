@@ -247,7 +247,7 @@ jobs:
   ansible-deploy:
     name: 'Deploy Ansible Playbook'
     runs-on: ubuntu-latest
-    needs: [parsing-ip]  # This job depends on the "deploy" job, which prepares your inventory file
+    needs: [parsing-ip]  
 
     steps:
       - name: Checkout code
