@@ -150,12 +150,7 @@
           SITENAME={{ host }}
         dest: /home/{{ ansible_user }}/sites/{{ host }}/.env
 
-   # - name: Create .env file
-   #   template: 
-   #     src=./dotenv.j2
-   #     dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
-   #   tags:
-   #     - dotenv
+   
     
     - name: Write SECRET_KEY to .env
       ansible.builtin.lineinfile:
