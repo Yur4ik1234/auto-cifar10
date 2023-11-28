@@ -263,40 +263,6 @@ jobs:
 
   
   
-    # deploying ansible 
-  #ansible-deploy:
-  #  name: 'Deploy ansible playbook'
-  #  runs-on: ubuntu-latest  
-  #  needs: [deploy]
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
-
-  #  - name: Create Ansible Inventory
-  #    run: |
-  #      echo "$(<host.txt)" > inventory.ini
-  #    working-directory: ${{ github.workspace }}
-  #  - name: Set up inventory
-  #    run: echo '::set-output name=inventory::$(cat host.txt)'
-
-  #  - name: Run playbook
-  #    uses: dawidd6/action-ansible-playbook@v2
-  #    with:
-        # Required, playbook filepath
-  #      playbook: ansible/playbook.yaml
-        # Optional, directory where playbooks live
-        #directory: ./
-        # Optional, SSH private key
-  #      key: ${{secrets.SSH_PRIVATE_KEY}}
-        # Optional, literal inventory file contents
-        #inventory: |
-        #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-        #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-          
-        #inventory: ${{ steps.set-up-inventory.outputs.inventory }}
-  #      inventory: |
-  #        13.80.129.170 ansible_become=yes ansible_ssh_user=adminuser 
-
-        
+    
           
           
