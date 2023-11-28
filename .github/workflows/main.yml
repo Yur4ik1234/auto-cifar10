@@ -255,7 +255,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ansible_ssh_key
           chmod 600 ansible_ssh_key
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Define this secret with your SSH private key
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  
 
       - name: Run Ansible playbook
         run: |
