@@ -135,13 +135,7 @@
       tags:
         - gunicorn
 
-#    - name: Collect Static Files
-#      community.general.django_manage:
-#        command: collectstatic --noinput
-#        project_path: "/home/{{ ansible_user }}/sites/{{ host }}"
-#        virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
-#      tags:
-#        - static
+
     - name: Create .env file
       ansible.builtin.copy:
         content: |
