@@ -102,14 +102,7 @@
         - Restart nginx
   
 
-  #  - name: Write gunicorn service script
-  #    template: 
-  #      src=./gunicorn.j2
-  #      dest=/etc/systemd/system/gunicorn-{{ host }}.service
-  #    notify:
-  #      - Restart gunicorn
-  #    tags:
-  #      - gunicorn
+  
 
     - name: Create Gunicorn systemd service unit file
       ansible.builtin.copy:
