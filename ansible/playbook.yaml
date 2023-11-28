@@ -17,15 +17,7 @@
       apt_repository:
         repo='ppa:deadsnakes/ppa'
 
-  #  - name: Update package lists
-  #    apt: update_cache=yes
-  #    become: yes
-
-   # - name: Install Python 3.9
-    #  apt:
-     #   name: python3.9
-      #  state: present
-      #become: yes
+  
       
     - name: Make sure required packages are installed
       apt: 
@@ -61,13 +53,7 @@
         append: yes
       when: not ansible_check_mode
 
-    #- name: Add nginx config to sites-available
-    #  template: 
-    #    src=./site-available.j2
-    #    dest=/etc/nginx/sites-available/{{ host }}
-    #  notify:
-    #    - Restart nginx
-    #  tags: nginx
+    
 
     - name: Create Nginx configuration file
       ansible.builtin.copy:
