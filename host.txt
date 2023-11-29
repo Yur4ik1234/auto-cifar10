@@ -1,8 +1,0 @@
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
-23.97.244.244 ansible_become=yes ansible_ssh_user=adminuser 
