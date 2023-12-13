@@ -1,0 +1,1 @@
+4.180.50.208 ansible_become=yes ansible_ssh_user=adminuser 
