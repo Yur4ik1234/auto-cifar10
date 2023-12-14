@@ -12,4 +12,5 @@ data = json.loads(input_json)
 # Extract the IP address
 ip_address = data[0]["ipAddress"]
 
+#print address presentation
 print(ip_address)
