@@ -1,2 +1,0 @@
-13.95.227.65 ansible_become=yes ansible_ssh_user=adminuser 
-13.95.227.65 ansible_become=yes ansible_ssh_user=adminuser 
