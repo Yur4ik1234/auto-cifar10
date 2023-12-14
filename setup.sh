@@ -11,4 +11,3 @@ az vmss list-instance-public-ips --name example-vmss  --resource-group azure-res
 python3 iphost.py >> host.txt
 ansible-playbook -i host.txt ansible/playbook.yaml
 
-#start
